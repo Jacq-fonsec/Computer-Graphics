@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+<title>E X P L O D E !</title>
+
+
+<!-- Vertex Shader -->
+<script id="vertex-shader" type="x-shader/x-vertex">
+
+// This is GLSL code (not HTML5)
+
+attribute vec4 vPosition;
+
+// uniforms to control explosion and color change
+//uniform 
+uniform float explode;
+
+//incoming color attribute and varying for fragment shader
+attribute vec3 vColor;
+varying vec4 color;
+
+void
+main()
+{
+	// explode the geometry x,y coords and set z and w
+	// Change the code below.
+	gl_Position.x = vPosition.x + (vPosition.x * mod(explode, 1.0));
+	gl_Position.y = vPosition.y + (vPosition.y * mod(explode, 1.0));
+    gl_Position.z = 0.0;
+    gl_Position.w = 1.0;
+	
+	//create a parameter to vary the color based on the explodeFactor
+	const float colorVar = 1.0;
+	
+	// Modify color with factor and clip to max valid value 
+	float red =  mix(vColor.r, colorVar, mod(explode, 1.0));
+	
+	float green =  mix(vColor.g, colorVar, mod(explode, 1.0));
+	
+	float blue =  mix(vColor.b, colorVar, mod(explode, 1.0));
+
+    //set the varying color for the fragment shader 
+    color = vec4(red, green, blue, 1.0);
+}
+</script>
+
+<!-- Fragment Shader -->
+<!-- (no change to this) -->
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+// This is GLSL code (not HTML5)
+
+precision mediump float;
+
+// Color coming in
+varying vec4 color;
+
+
+void
+main()
+{
+   //pass color to fragment shader
+    gl_FragColor = color;
+}
+</script>
+
+<!-- JS Utility codes and codes for this program -->
+<script type="text/javascript" src="../Common/webgl-utils.js"></script>
+<script type="text/javascript" src="../Common/initShaders.js"></script>
+<script type="text/javascript" src="../Common/MV.js"></script>
+<script type="text/javascript" src="explode.js"></script>
+</head>   
+
+<body>
+<!-- Add text to communicate what program does -->
+<div style="font-family:verdana";>
+<h1> CSE 470 HW#1: Explode!</h1>
+
+<strong>Author: </strong>Jacqueline Fonseca
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp        
+<strong>Date: </strong>January 28, 2019</br>
+
+</br>
+<strong>Description: </strong></br>This program creates an explosion out of shapes, where there is core figure that remains stationary and does not change in color. The other shapes expand outwards and change to white gradually. For this program, I created a dog, where the head is the core.
+</br>
+</br>
+<strong>How did you map color from the initial (r,g,b) to white?</strong></br>
+In order to change the color to white, I used the mix function, which performs as a linear interpolation. I used u as current color, v as desired color (white = 1.0), and s as the explode (where explode is between 0 and 1)
+</br>
+</br>
+<strong>Resources: </strong>Prof. Angel's codes. </br>
+</br>
+</div>
+
+<canvas id="gl-canvas" width="512" height="512" style="border:2px solid #000000;">
+Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+
+</body>
+</html>

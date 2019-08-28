@@ -1,0 +1,113 @@
+<!-- 
+Name: Jacqueline Fonseca
+Date: April 24th, 2019
+Program description: This program implements an animation of a dog walking in a circle on top
+    of a ground plane. The dog is created from 10 parts (either cubes or spheres) and 2 different
+    textures while the ground plane is an instance of a cube with one texture. The user has the
+    ability to turn the animation off or on using the Toggle Animation button and can add or remove
+    implemented sound using the Audio On/Off button.
+Resources used: Prof. Angel's code, class slides, Khronos. -->
+<!DOCTYPE html>
+<html>
+
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+<script id="vertex-shader" type="x-shader/x-vertex">
+
+attribute vec3 vNormal;
+attribute  vec3 vPosition;
+attribute  vec2 vTexCoord;
+
+uniform mat4 modelViewMatrix;
+uniform mat4 projectionMatrix;
+uniform vec4 ambient, diffuse, specular, emissive;
+uniform vec4 lightPosition;
+
+varying vec4 fcolor;
+varying vec2 fTexCoord;
+
+void main() 
+{
+	vec4 pos4D = vec4(vPosition, 1.0);
+	vec4 nor4D = vec4(vNormal, 0.0);
+
+    vec3 pos = (modelViewMatrix * pos4D).xyz;
+    vec3 light = (modelViewMatrix * lightPosition).xyz;
+    vec3 L = normalize( light - pos );
+
+	vec3 eyePoint = vec3(0, 0, 0);
+	vec3 E = normalize( eyePoint - pos );
+
+    vec3 H = normalize( L + E );
+	
+    vec3 N = normalize( (modelViewMatrix*nor4D).xyz);
+
+    //light
+
+    float Kd = max( dot(L, N), 0.0 );
+    vec4  diffuse1 = Kd*diffuse;
+
+    float Ks = max(dot(N, H), 0.0);
+    vec4  specular1 = Ks * specular;
+    
+    if( dot(L, N) < 0.0 ) {
+	   specular1 = vec4(0.0, 0.0, 0.0, 1.0);
+    } 
+	
+	fcolor = ambient + diffuse1 + specular1 + emissive;
+
+    gl_Position = projectionMatrix * modelViewMatrix * pos4D;
+    fTexCoord = vTexCoord;
+
+    fcolor.a = 1.0;
+} 
+
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+precision mediump float;
+varying vec4 fcolor;
+
+varying vec2 fTexCoord;
+
+uniform sampler2D texture;
+
+void main()
+{
+    /*gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); */
+    gl_FragColor = fcolor * texture2D( texture, fTexCoord );
+
+}
+</script>
+
+
+
+<script type="text/javascript" src="../Common/webgl-utils.js"></script>
+<script type="text/javascript" src="../Common/InitShaders.js"></script>
+<script type="text/javascript" src="../Common/MV.js"></script>
+<script type="text/javascript" src="Fonseca_Hw4.js"></script>
+
+<b>Running Firefox is recommended for this project.</b>
+<p></p>
+
+<b>Name:</b> Jacqueline Fonseca </html></br>
+<b>Date:</b> April 24th, 2019 </br>
+<b>Program description:</b> This program implements an animation of a dog walking in a circle on top
+    of a ground plane. The dog is created from 10 parts (either cubes or spheres) and 2 different
+    textures while the ground plane is an instance of a cube with one texture. The user has the
+    ability to turn the animation off or on using the <i>Toggle Animation</i> button and can add or remove
+    implemented sound using the <i>Audio On/Off</i> button. </br>
+<b>Resources used:</b> Prof. Angel's code, class slides, Khronos.
+
+<p></p>
+<button id = "toggle">Toggle Animation</button>
+<button id = "audio">Audio On/Off</button>
+</html>
+</br>
+
+<body>
+<canvas id="gl-canvas" width="512"" height="512">
+Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+</body>
+</html>

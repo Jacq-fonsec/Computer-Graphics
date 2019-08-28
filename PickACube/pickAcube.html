@@ -1,0 +1,92 @@
+<html>
+<script id="vertex-shader" type="x-shader/x-vertex">
+
+
+attribute vec4 vPosition;
+attribute vec4 vColor;
+varying vec4 fColor;
+
+uniform mat4 matrix;
+
+void main() 
+{
+   
+    fColor = vColor;
+
+	gl_Position = matrix * vPosition;
+} 
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+precision mediump float;
+   
+varying vec4 fColor;
+
+void
+main()
+{
+    gl_FragColor = fColor;
+}
+</script>
+
+</script>
+
+<script type="text/javascript" src="../Common/webgl-utils.js"></script>
+<script type="text/javascript" src="../Common/initShaders.js"></script>
+<script type="text/javascript" src="../Common/MV.js"></script>
+<script type="text/javascript" src="pickAcube.js"></script>
+<script type="text/javascript">
+
+	function getCursorPosition(canvas, event) {
+		var coord = [];
+    	var rect = canvas.getBoundingClientRect();
+	    coord.push(-1 + 2*event.clientX/canvas.width);
+	    coord.push(1 - 2*(event.clientY)/canvas.height);
+	    return coord;
+}
+</script>
+<body>
+<div style="font-family:verdana";>
+<h1> CSE 470 HW#2: Pick A Cube!</h1>
+
+<strong>Author: </strong>Jacqueline Fonseca
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp        
+<strong>Date: </strong>February 19th, 2019</br>
+
+</br>
+<strong>Description: </strong></br>This program creates eight eight instances of a cube protoype, each with a different rotation. The center cube will replicate a cube chosen by the user.
+</br>
+</br>
+<strong>Resources: </strong>Prof. Angel's codes (Rotating cube), w3Schools.</br>
+</br>
+</div>	
+<canvas id="gl-canvas" width="512"" height="512" style="border:1px solid #000000;">
+Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+   
+<br/>
+<strong>Instructions:</strong></br>
+In order to change the center cube, click on any outer cube Your click must be on or near the chosen cube. 
+</br>
+
+<button id= "rButton">Reset center cube</button>
+
+<br/>
+
+
+<div class="slidecontainer">
+	Scale Cube <b>10%</b>
+	<input type="range" min=".1" max="1" step="0.05" value="0.25" class="slider" id="scale"><b>100%</b>
+</div>
+<br/>
+
+<div class="slidecontainer">
+	Rotation Speed <b>0</b>
+	<input type="range" min="0" max="2" step="0.05" value="0.2" class="slider" id="rotation">
+	<b>2</b>
+</div>
+
+</body>
+</html>
+
